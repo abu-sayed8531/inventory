@@ -57,7 +57,7 @@
                         <h6>User Name</h6>
                         <hr class="user-dropdown-divider  p-0"/>
                     </div>
-                    <a href="{{url('/userProfile')}}" class="side-bar-item">
+                    <a href="{{url('/user-profile')}}" class="side-bar-item">
                         <span class="side-bar-item-caption">Profile</span>
                     </a>
                     <a href="{{url("/logout")}}" class="side-bar-item">
@@ -77,32 +77,32 @@
         <span class="side-bar-item-caption">Dashboard</span>
     </a>
 
-    <a href="{{url("/customerPage")}}" class="side-bar-item {{request()->routeIs('customer') ? 'side-bar-item-active' : ''}}">
+    <a href="{{url("/customer-page")}}" class="side-bar-item {{request()->routeIs('customer') ? 'side-bar-item-active' : ''}}">
         <i class="bi bi-people"></i>
         <span class="side-bar-item-caption">Customer</span>
     </a>
 
-    <a href="{{url("/categoryPage")}}" class="side-bar-item {{request()->routeIs('category') ? 'side-bar-item-active' : ''}}">
+    <a href="{{url("/category-page")}}" class="side-bar-item {{request()->routeIs('category') ? 'side-bar-item-active' : ''}}">
         <i class="bi bi-list-nested"></i>
         <span class="side-bar-item-caption">Category</span>
     </a>
 
-    <a href="{{url("/productPage")}}" class="side-bar-item {{request()->routeIs('product') ? 'side-bar-item-active' : ''}}">
+    <a href="{{url("/product-page")}}" class="side-bar-item {{request()->routeIs('product') ? 'side-bar-item-active' : ''}}">
         <i class="bi bi-bag"></i>
         <span class="side-bar-item-caption">Product</span>
     </a>
 
-    <a href="{{url('/salePage')}}" class="side-bar-item {{ request()->routeIs('sale') ? 'side-bar-item-active' : '' }}">
+    <a href="{{url('/sale-page')}}" class="side-bar-item {{ request()->routeIs('sale') ? 'side-bar-item-active' : '' }}">
         <i class="bi bi-currency-dollar"></i>
         <span class="side-bar-item-caption">Create Sale</span>
     </a>
 
-    <a href="{{url('/invoicePage')}}" class="side-bar-item {{request()->routeIs('invoice') ? 'side-bar-item-active' : ''}}">
+    <a href="{{url('/invoice-page')}}" class="side-bar-item {{request()->routeIs('invoice') ? 'side-bar-item-active' : ''}}">
         <i class="bi bi-receipt"></i>
         <span class="side-bar-item-caption">Invoice</span>
     </a>
 
-    <a href="{{url('/reportPage')}}" class="side-bar-item {{ request()->routeIs('report') ? 'side-bar-item-active' : '' }}">
+    <a href="{{url('/report-page')}}" class="side-bar-item {{ request()->routeIs('report') ? 'side-bar-item-active' : '' }}">
         <i class="bi bi-file-earmark-bar-graph"></i>
         <span class="side-bar-item-caption">Report</span>
     </a>

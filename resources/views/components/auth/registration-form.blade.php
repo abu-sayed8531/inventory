@@ -39,3 +39,69 @@
         </div>
     </div>
 </div>
+<script>
+    async function onRegistration(){
+        let email = document.getElementById('email').value;
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let mobile = document.getElementById('mobile').value;
+        let password = document.getElementById('password').value;
+        if(email.length === 0){
+            errorToast('Email is required');
+        }
+       else if(firstName.length ===0){
+            errorToast('First name is required');
+        }
+       else  if(lastName.length === 0){
+            errorToast('Last name is required');
+        }
+       else if(mobile.length === 0){
+            errorToast('Mobile is required');
+        }
+       else   if(password.length ===0){
+            errorToast('Password is required')
+        }
+        else {
+            showLoader();
+            try{
+                let res = await axios.post('/user-registration',{
+                    first_name : firstName,
+                    last_name : lastName,
+                    email : email,
+                    phone : mobile,
+                    password : password,
+                });
+                hideLoader();
+                
+                if(res.status === 201 && res.data.status === 'success'){
+                    successToast(res.data.message);
+                    setTimeout(function(){
+                        window.location.href = '/user-login';
+                    },2000);
+                }
+                else{
+                    
+                    errorToast(res.data.message);
+                }
+                
+
+            }
+            catch(err){
+                hideLoader();
+                console.log(err.response);
+                if(err.response.status === 422 && err.response.data.status == 'failed'){
+
+                    errors = err.response.data.errors;
+                    for(let field in errors){
+                    
+                        errorToast(errors[field][0]);
+                    }
+                }
+                else{
+                    errorToast('Internal server error');
+                }
+                
+            }
+        }
+    }
+</script>

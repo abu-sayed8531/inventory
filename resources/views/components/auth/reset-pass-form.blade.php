@@ -17,3 +17,55 @@
         </div>
     </div>
 </div>
+<script>
+    async function ResetPass(){
+        let password = document.getElementById('password').value;
+        let cPassword = document.getElementById('cpassword').value;
+        if(password.length === 0){
+            errorToast('Password is required');
+        }
+        else if(cPassword.length === 0){
+            errorToast('Confirm Password is required')
+        }
+        else{
+            showLoader();
+            try{
+              let res = await axios.post('/reset-password',{
+                password : password,
+                password_confirmation : cPassword,
+              });
+              console.log(res);
+              hideLoader();
+              if(res.status === 200 && res.data.status === 'success'){
+                successToast(res.data.message);
+                setTimeout(function(){
+                    window.location.href = '/user-login';
+                },2000);
+
+              }
+              else{
+                errorToast(res.data.message);
+              }
+            }
+            catch(err){
+                hideLoader();
+                
+                if (err.response.status === 422 && err.response.data.status == 'failed'){
+
+                    errors = err.response.data.errors;
+                    for(let field in errors){
+                    
+                        errorToast(errors[field][0]);
+                    }
+                }
+               else if(err.response.status === 401 && err.response.data.status === 'failed'){
+                     errorToast(err.response.data.message);
+                }
+                else{
+                    errorToast('Internal server error');
+                }
+            }
+        }
+
+    }
+</script>
