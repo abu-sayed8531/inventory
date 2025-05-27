@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use PDO;
+
+
 use App\Models\User;
 use App\Mail\OtpMail;
 use App\Helper\jwtToken;
@@ -18,8 +19,18 @@ class UserController extends Controller
     {
         return view('pages.dashboard.profile-page');
     }
-    public function userLoginPage(Request $request)
+
+    public function userLoginPage()
     {
+        // $token = jwtToken::createToken('user@mail.com', 5);
+        // $payload = jwtToken::verifyToken($token);
+        //dd($request->cookie('token'));
+        //dd(base64_decode('eyJpc3MiOiJleGFtcGxlIiwidXNlcl9pZCI6NSwidXNlcl9lbWFpbCI6InVzZXJAbWFpbC5jb20iLCJleHAiOjE3NDczMDY5NTcsImlhdCI6MTc0NzIyMDU1N30 '));
+        //print_r(explode('.', $token));
+
+
+
+        // return response()->json('success')->cookie('token', $token);
         // $token = jwtToken::createToken('user@mail.com', 5);
         // $payload = jwtToken::verifyToken($token);
         //dd($request->cookie('token'));
@@ -75,6 +86,7 @@ class UserController extends Controller
     }
     public function userRegistrationPage()
     {
+
 
         return view('pages.auth.registration-page');
     }
