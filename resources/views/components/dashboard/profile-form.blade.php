@@ -35,4 +35,59 @@
         </div>
     </div>
 </div>
+<script>
+    getProfile()
+    async function getProfile(){
+        showLoader();
+        let res=await axios.get("/get-profile");
+        hideLoader();
+        if(res.status===200 && res.data.status==='success'){
+            // console.log(res.data.data);
+            let data=res.data['data'];
+            document.getElementById('email').value=data['email'];
+            document.getElementById('firstName').value=data['first_name'];
+            document.getElementById('lastName').value=data['last_name'];
+            document.getElementById('mobile').value=data['mobile'];
+            
+        }
+        else{
+            errorToast(res.data['message']);
+        }
+    }
+    async function onUpdate() {
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let mobile = document.getElementById('mobile').value;
+        let email = document.getElementById('email').value;
 
+        if(firstName.length===0){
+            errorToast('First Name is required')
+        }
+        else if(lastName.length===0){
+            errorToast('Last Name is required')
+        }
+        else if(mobile.length===0){
+            errorToast('Mobile is required')
+        }
+        else if(email.length===0){
+            errorToast('Password is required')
+        }
+        else{
+            showLoader();
+            let res=await axios.post("/user-update",{
+                first_name:firstName,
+                last_name:lastName,
+                mobile:mobile,
+                email:email
+            })
+            hideLoader();
+            if(res.status===200 && res.data['status']==='success'){
+                successToast(res.data['message']);
+                await getProfile();
+            }
+            else{
+                errorToast(res.data['message'])
+            }
+        }
+    }
+</script>

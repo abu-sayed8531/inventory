@@ -22,24 +22,7 @@ class UserController extends Controller
 
     public function userLoginPage()
     {
-        // $token = jwtToken::createToken('user@mail.com', 5);
-        // $payload = jwtToken::verifyToken($token);
-        //dd($request->cookie('token'));
-        //dd(base64_decode('eyJpc3MiOiJleGFtcGxlIiwidXNlcl9pZCI6NSwidXNlcl9lbWFpbCI6InVzZXJAbWFpbC5jb20iLCJleHAiOjE3NDczMDY5NTcsImlhdCI6MTc0NzIyMDU1N30 '));
-        //print_r(explode('.', $token));
 
-
-
-        // return response()->json('success')->cookie('token', $token);
-        // $token = jwtToken::createToken('user@mail.com', 5);
-        // $payload = jwtToken::verifyToken($token);
-        //dd($request->cookie('token'));
-        //dd(base64_decode('eyJpc3MiOiJleGFtcGxlIiwidXNlcl9pZCI6NSwidXNlcl9lbWFpbCI6InVzZXJAbWFpbC5jb20iLCJleHAiOjE3NDczMDY5NTcsImlhdCI6MTc0NzIyMDU1N30 '));
-        //print_r(explode('.', $token));
-
-
-
-        // return response()->json('success')->cookie('token', $token);
         return view('pages.auth.login-page');
     }
     function userLogin(UserLogin $request)
@@ -62,6 +45,7 @@ class UserController extends Controller
             if ($user) {
 
                 $token = jwtToken::createToken($user->email, $user->id);
+
                 return response()->json(
                     [
                         'message' => 'Logged in successfully',
@@ -69,7 +53,7 @@ class UserController extends Controller
                         'status' => 'success'
                     ],
                     200
-                )->cookie('token', $token, time() + 3600 * 24);
+                )->cookie('token', $token,  60 * 24);
             } else {
                 return response()->json([
                     'message' => 'User not found',
@@ -144,10 +128,11 @@ class UserController extends Controller
                 'status' => 401,
             ]);
         }
-        return response()->json([
-            'message' => 'Logout successfully',
-            'status' => 200,
-        ])->cookie('token', null, -1);
+        // return response()->json([
+        //     'message' => 'Logout successfully',
+        //     'status' => 200,
+        // ])->cookie('token', null, -1);
+        return redirect('/user-login')->cookie('token', null, -1);
     }
     public function resetPasswordPage()
     {
@@ -262,7 +247,71 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'Otp verifies successfully',
                 'status' => 'success',
-            ])->cookie('token', $token, time() + 3600 * 24);
+            ])->cookie('token', $token, time() + 60 * 24);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Internal server error',
+                'status' => 'failed',
+            ], 500);
+        }
+    }
+
+    public function GetUserProfile(Request $request)
+    {
+        $userId = (int) $request->header('user_id');
+        $email = $request->header('user_email');
+
+        try {
+
+            $user = User::where(['id' => $userId, 'email' => $email])->first();
+
+            return response()->json([
+                'message' => 'successful',
+                'status' => 'success',
+                'data' => $user,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Internal server error',
+                'status' => 'failed',
+            ], 500);
+        }
+    }
+    function UserUpdate(Request $request)
+    {
+        $userId = $request->header('user_id');
+        $email = $request->header('user_email');
+        try {
+            $validation = Validator::make($request->all(), [
+                'first_name' => 'required',
+                'email' => 'required|email:filter_unicode',
+                'last_name' => 'required',
+                'mobile' => 'required',
+
+            ]);
+            if ($validation->fails()) {
+                return response()->json([
+                    'message' => 'Validation Failed',
+                    'errors' => $validation->errors(),
+                    'status' => 'failed'
+                ], 422);
+            }
+
+            $user = User::where(['email' => $email, 'id' => $userId])->first();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'User Not found',
+                    'status' => 'failed',
+                ], 404);
+            }
+            $updated = $user->update($request->only('first_name', 'last_name', 'email', 'mobile'));
+            if ($updated) {
+
+                return response()->json([
+                    'message' => 'User updated successfully',
+                    'status' => 'success',
+                ]);
+            }
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Internal server error',

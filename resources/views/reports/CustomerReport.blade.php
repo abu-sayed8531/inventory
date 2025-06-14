@@ -41,19 +41,15 @@
         <th>Report</th>
         <th>Date</th>
         <th>Total</th>
-        <th>Discount</th>
-        <th>Vat</th>
-        <th>Payable</th>
+   
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>Sales Report</td>
+        <td>Customer Report</td>
         <td>{{$from_date}} to {{$to_date}}</td>
         <td>{{$total}}</td>
-        <td>{{$discount}}</td>
-        <td>{{$vat}}</td>
-        <td>{{$payable}}</td>
+        
     
     </tr>
     </tbody>
@@ -67,23 +63,17 @@
         <th>Customer</th>
         <th>Phone</th>
         <th>Email</th>
-        <th>Total</th>
-        <th>Discount</th>
-        <th>Vat</th>
-        <th>Payable</th>
+       
         <th>Date</th>
     </tr>
     </thead>
     <tbody>
-   @foreach($invoice as $item)
+   @foreach($customer as $item)
    <tr>
-    <td>{{$item->customer->name}}</td>
-    <td>{{$item->customer->mobile}}</td>
-        <td>{{$item->customer->email}}</td>
-    <td>{{$item->total ?? 0}}</td>
-    <td>{{$item->discount ?? 0}}</td>
-    <td>{{$item->vat ?? 0}}</td>
-    <td>{{$item->payable ?? 0}}</td>
+    <td>{{$item->name}}</td>
+    <td>{{$item->mobile}}</td>
+        <td>{{$item->email}}</td>
+    
     <td>{{date('Y-m-d',strtotime($item->created_at))}}</td>
 
     

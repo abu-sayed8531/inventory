@@ -44,7 +44,7 @@
                             <div class="col-12">
                                 <p class="text-bold text-xs my-1 text-dark"> TOTAL: <i class="bi bi-currency-dollar"></i> <span id="total"></span></p>
                                 <p class="text-bold text-xs my-2 text-dark"> PAYABLE: <i class="bi bi-currency-dollar"></i>  <span id="payable"></span></p>
-                                <p class="text-bold text-xs my-1 text-dark"> VAT(5%): <i class="bi bi-currency-dollar"></i>  <span id="vat"></span></p>
+                                <p class="text-bold text-xs my-1 text-dark"> VAT(10%): <i class="bi bi-currency-dollar"></i>  <span id="vat"></span></p>
                                 <p class="text-bold text-xs my-1 text-dark"> Discount: <i class="bi bi-currency-dollar"></i>  <span id="discount"></span></p>
                             </div>
 
@@ -59,4 +59,43 @@
     </div>
 </div>
 
+<script>
+    async function InvoiceDetails(cus_id,inv_id){
+        showLoader();
+        let res = await axios.post('/invoice-details',{invoice_id: inv_id});
+        hideLoader();
+        let data = res.data.data;
+        document.getElementById('CName').innerText= data.invoice.customer.name;
+        document.getElementById('CId').innerText=data.invoice.customer.id;
+        document.getElementById('CEmail').innerText=data.invoice.customer.email;
+        document.getElementById('total').innerText=data.total;
+        document.getElementById('payable').innerText=data.payable;
+        document.getElementById('vat').innerText=data.vat;
+        document.getElementById('discount').innerText=data.discount;
+        
+        let invoiceList = $('#invoiceList');
+        invoiceList.empty();
+        data.invoice_products.forEach(function(item,index){
+            let row = `
+                       <tr class="text-xs">
+                        <td>${item.product.name}</td>
+                        <td>${item.qty}</td>
+                        <td>${item.sale_price}</td>
+                        </tr>
+                       `;
+            invoiceList.append(row);           
+        });
+        $('#details-modal').modal('show');
+    }
 
+    function PrintPage(){
+        let printDocument = $('#invoice').html();
+        let originalDocument = document.body.innerHTML;
+        document.body.innerHTML = printDocument;
+        window.print();
+        document.body.innerHTML = originalDocument;
+        setTimeout(function(){
+            location.reload();
+        },1000);
+    }
+</script>

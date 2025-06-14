@@ -21,11 +21,7 @@
                 </tr>
                 </thead>
                 <tbody id="tableList">
-                 <tr>
-                    <td>12</td>
-                    <td>new category</td>
-                    <td><div data-bs-target="#update-modal" data-bs-toggle="modal" class="btn btn-success mx-1">Edit</div><div class="btn btn-danger mx-1" data-bs-target="#delete-modal" data-bs-toggle="modal">Delete</div></td>
-                 </tr>  
+                 
                 </tbody>
             </table>
             </div>
@@ -33,4 +29,52 @@
     </div>
 </div>
 </div>
+<script>
+    getList();
+    async function getList(){
+        showLoader();
+        let res = await axios.post('/category-list');
+        hideLoader();
+        let tableData = $('#tableData');
+        let tableList = $('#tableList');
+        tableData.DataTable().destroy();
+        tableList.empty();
+        if(res.status === 200 && res.data.status === 'success'){
 
+            res.data.data.forEach(function(item,index){
+    
+                let tr = ` 
+                        <tr>
+                            <td>${index+1}</td>
+                            <td>${item['name']}</td>
+                            <td>
+                              <button class="btn editBtn btn-sm btn-outline-success" data-id="${item['id']}">Edit</button>  
+                            <button class="btn deleteBtn btn-sm btn-outline-danger" data-id="${item['id']}">delete</button>  
+    
+                              </td>
+                        </tr>
+                      `;
+                      tableList.append(tr);
+            });
+        }
+        else{
+            errorToast('Failed .. ');
+        }
+        $('.editBtn').on('click',async function(){
+             let id = $(this).data('id');
+             await FillUpdateForm(id);
+             $('#update-modal').modal('show');
+        });
+
+        $('.deleteBtn').on('click',function(){
+            let id = $(this).data('id');
+            $('#delete-modal').modal('show');
+            $('#deleteID').val(id);
+        });
+
+        new DataTable('#tableData',{
+            order:[[0,'asc']],
+            lengthMenu:[3,5,10,15,30],
+        });
+    }
+</script>

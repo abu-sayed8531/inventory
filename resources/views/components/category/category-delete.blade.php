@@ -15,5 +15,31 @@
         </div>
     </div>
 </div>
+<script>
+    async function itemDelete(){
+        let id = document.getElementById('deleteID').value
+        
+        document.getElementById('delete-modal-close').click();
+        try{
+
+            showLoader();
+             let res = await axios.post('/category-delete',{id:id});
+             
+            hideLoader();
+            if(res.status === 200 && res.data.status === 'success'){
+                successToast('Category deleted successfully');
+                 await getList();
+            }
+            else{
+                errorToast('Failed ....');
+            }
+        }
+        catch(err){
+            hideLoader();
+                
+                errorToast('This category is in use  or Internal server error');
+        }
+    }
+</script>
 
 

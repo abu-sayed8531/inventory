@@ -29,7 +29,7 @@ class jwtToken
                     [
 
                         'message' => 'invalid token',
-                        'status' => 200,
+                        'status' => 'failed',
                     ]
                 );
             }

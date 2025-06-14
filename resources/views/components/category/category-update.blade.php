@@ -24,5 +24,35 @@
         </div>
     </div>
 </div>
+<script>
+    async function FillUpdateForm(id){
+        document.getElementById('updateID').value = id;
+        showLoader();
+        let res = await axios.post('/category-by-id',{id:id});
+        hideLoader();
+        document.getElementById('categoryNameUpdate').value = res.data.data['name'];
 
+    }
+    async function Update(){
+         let catName = document.getElementById('categoryNameUpdate').value;
+         let id = document.getElementById('updateID').value;
+         if(catName.length === 0){
+            errorToast('Category name required');
+         }
+         else{
+             document.getElementById('update-modal-close').click();
+             showLoader();
+             let res = await axios.post('/category-update',{id:id,name:catName}); 
+             hideLoader();
+             if(res.status === 200 && res.data.status === 'success'){
+                successToast('Category updated successfully');
+                document.getElementById('update-form').reset();
+                getList();
+             }
+             else{
+                errorToast('Failed ... ');
+             }
+         }
+    }
+</script>
 

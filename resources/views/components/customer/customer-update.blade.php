@@ -32,4 +32,55 @@
     </div>
 </div>
 
+<script>
+    async function FillUpUpdateForm(id){
+        document.getElementById('updateID').value = id;
+        showLoader();
+        let res = await axios.post('/customer-by-id',{id:id});
+        hideLoader();
+        let customer = res.data.data;
+        document.getElementById('customerNameUpdate').value = customer['name'];
+        document.getElementById('customerMobileUpdate').value = customer['mobile'];
+        document.getElementById('customerEmailUpdate').value = customer['email'];
+    }
+    async function Update() {
 
+        let customerName = document.getElementById('customerNameUpdate').value;
+        let customerEmail = document.getElementById('customerEmailUpdate').value;
+        let customerMobile = document.getElementById('customerMobileUpdate').value;
+        let updateID = document.getElementById('updateID').value;
+
+
+        if (customerName.length === 0) {
+            errorToast("Customer Name Required !")
+        }
+        else if(customerEmail.length===0){
+            errorToast("Customer Email Required !")
+        }
+        else if(customerMobile.length===0){
+            errorToast("Customer Mobile Required !")
+        }
+        else {
+
+            document.getElementById('update-modal-close').click();
+
+            showLoader();
+
+            let res = await axios.post("/customer-update",{name:customerName,email:customerEmail,mobile:customerMobile,id:updateID})
+
+            hideLoader();
+
+            if(res.status===200 && res.data.status === 'success'){
+
+                successToast('Customer Updated');
+
+                document.getElementById("update-form").reset();
+
+                await getList();
+            }
+            else{
+                errorToast("Request fail !")
+            }
+        }
+    }
+</script>

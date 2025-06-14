@@ -7,7 +7,7 @@
                     <h5>Invoices</h5>
                 </div>
                 <div class="align-items-center col">
-                    <a    href="{{url("/salePage")}}" class="float-end btn m-0 bg-gradient-primary">Create Sale</a>
+                    <a    href="{{url("/sale-page")}}" class="float-end btn m-0 bg-gradient-primary">Create Sale</a>
                 </div>
             </div>
             <hr class="bg-dark "/>
@@ -25,22 +25,64 @@
                 </tr>
                 </thead>
                 <tbody id="tableList">
-                     <tr>
-                        <td>
-                            12
-                        </td>
-                        <td>sayed</td>
-                        <td>01728043582</td>
-                        <td>12</td>
-                        <td>12</td>
-                        <td>12</td>
-                        <td>12</td>
-                        <td><div data-bs-toggle="modal" data-bs-target="#details-modal" class="btn btn-info mx-1">Details</div><div data-bs-toggle="modal" data-bs-target="#delete-modal" class="btn btn-danger mx-1">Delete</div></td>
-
-                    </tr>
+                     
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 </div>
+<script>
+
+getList();
+
+async function getList() {
+
+    showLoader();
+    let res=await axios.post("/invoice-list");
+    hideLoader();
+
+    let tableList=$("#tableList");
+    let tableData=$("#tableData");
+
+    tableData.DataTable().destroy();
+    tableList.empty();
+
+    res.data.data.forEach(function (item,index) {
+        let row=`<tr>
+                    <td>${index+1}</td>
+                    <td>${item['customer']['name']}</td>
+                    <td>${item['customer']['mobile']}</td>
+                    <td>${item['total']?? 0}</td>
+                    <td>${item['vat']?? 0}</td>
+                    <td>${item['discount']?? 0}</td>
+                    <td>${item['payable']?? 0}</td>
+                    <td>
+                        <button data-id="${item['id']}" data-cus="${item['customer']['id']}" class="viewBtn btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0"><i class="fa text-sm fa-eye"></i></button>
+                        <button data-id="${item['id']}" data-cus="${item['customer']['id']}" class="deleteBtn btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0"><i class="fa text-sm  fa-trash-alt"></i></button>
+                    </td>
+                 </tr>`
+        tableList.append(row)
+    })
+
+    $('.viewBtn').on('click', async function () {
+        let id= $(this).data('id');
+        let cus= $(this).data('cus');
+        await InvoiceDetails(cus,id)
+    })
+
+    $('.deleteBtn').on('click',function () {
+        let id= $(this).data('id');
+        document.getElementById('deleteID').value=id;
+        $("#delete-modal").modal('show');
+    })
+
+    new DataTable('#tableData',{
+        order:[[0,'desc']],
+        lengthMenu:[5,10,15,20,30]
+    });
+
+}
+
+
+</script>

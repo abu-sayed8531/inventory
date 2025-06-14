@@ -16,6 +16,7 @@ class TokenVerificationMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         $token = $request->cookie('token');
 
         if (!$token) {
@@ -25,7 +26,7 @@ class TokenVerificationMiddleware
             ]);
         }
         $payload = jwtToken::verifyToken($token);
-
+        //dd($payload);
         $request->headers->set('user_email', $payload->user_email);
         $request->headers->set('user_id', $payload->user_id ?? null);
 

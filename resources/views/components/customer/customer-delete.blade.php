@@ -16,5 +16,28 @@
         </div>
     </div>
 </div>
+<script>
+     async  function  itemDelete(){
+            let id=document.getElementById('deleteID').value;
+            document.getElementById('delete-modal-close').click();
+            try{
+
+                showLoader();
+                let res=await axios.post("/customer-delete",{id:id})
+                hideLoader();
+                if(res.status=== 200 && res.data.status === 'success'){
+                    successToast("Customer deleted");
+                    await getList();
+                }
+                else{
+                    errorToast("Request fail!")
+                }
+            }
+            catch(err){
+                hideLoader();
+                errorToast('Either this customer is in use or Internal server error');
+            }
+     }
+</script>
 
 

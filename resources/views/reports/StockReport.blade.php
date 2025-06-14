@@ -29,7 +29,7 @@
 </head>
 <body>
 
-<a href="{{ route('sales.report', ['FromDate' => $from_date, 'ToDate' => $to_date, 'download' => 1]) }}" class="btn btn-primary">
+<a href="{{ route('stock.report', ['PFromDate' => $from_date, 'PToDate' => $to_date, 'download' => 1]) }}" class="btn btn-primary">
     Download Report
 </a>
 
@@ -40,20 +40,15 @@
     <tr>
         <th>Report</th>
         <th>Date</th>
-        <th>Total</th>
-        <th>Discount</th>
-        <th>Vat</th>
-        <th>Payable</th>
+         <th>Total product</th>
     </tr>
     </thead>
     <tbody>
     <tr>
-        <td>Sales Report</td>
+        <td>Stock Report</td>
         <td>{{$from_date}} to {{$to_date}}</td>
         <td>{{$total}}</td>
-        <td>{{$discount}}</td>
-        <td>{{$vat}}</td>
-        <td>{{$payable}}</td>
+       
     
     </tr>
     </tbody>
@@ -64,26 +59,19 @@
 <table class="customers" >
     <thead>
     <tr>
-        <th>Customer</th>
-        <th>Phone</th>
-        <th>Email</th>
-        <th>Total</th>
-        <th>Discount</th>
-        <th>Vat</th>
-        <th>Payable</th>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Stock</th>
         <th>Date</th>
+        
     </tr>
     </thead>
     <tbody>
-   @foreach($invoice as $item)
+   @foreach($product as $item)
    <tr>
-    <td>{{$item->customer->name}}</td>
-    <td>{{$item->customer->mobile}}</td>
-        <td>{{$item->customer->email}}</td>
-    <td>{{$item->total ?? 0}}</td>
-    <td>{{$item->discount ?? 0}}</td>
-    <td>{{$item->vat ?? 0}}</td>
-    <td>{{$item->payable ?? 0}}</td>
+    <td>{{$item->name}}</td>
+    <td>{{$item->price}}</td>
+    <td>{{$item->unit}}</td>
     <td>{{date('Y-m-d',strtotime($item->created_at))}}</td>
 
     

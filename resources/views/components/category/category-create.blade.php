@@ -24,4 +24,44 @@
     </div>
 </div>
 
+<script>
+    async function Save(){
+        let catName = document.getElementById('categoryName').value;
+        if(catName.length === 0){
+            errorToast('Category Name is required');
+        }
+        else{
+            try{
 
+                document.getElementById('modal-close').click();
+                showLoader();
+                let res = await axios.post('/category-create',{name: catName});
+                hideLoader();
+                if(res.status === 201 && res.data.status === 'success'){
+                    document.getElementById('save-form').reset();
+                    successToast('Category created');
+                    getList();
+                }
+                else{
+                    errorToast('Failed ...');
+                }
+            }
+            catch(err){
+                hideLoader();
+                console.log(err.response);
+                if(err.response.status === 422 && err.response.data.status == 'failed'){
+
+                    errors = err.response.data.errors;
+                    for(let field in errors){
+                    
+                        errorToast(errors[field][0]);
+                    }
+                }
+                else{
+                    errorToast('Internal server error');
+                }
+            }
+
+        }
+    }
+</script>
