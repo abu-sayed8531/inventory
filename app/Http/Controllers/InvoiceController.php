@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\InvoiceProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -64,6 +65,11 @@ class InvoiceController extends Controller
                 if (!$invoice_product) {
                     throw new \Exception('Failed to create invoice details.');
                 }
+                // product update
+                $product = Product::where(['user_id' => $userId, 'id' => $eachProduct['product_id']])->first();
+                $qty = (int) $product->unit - (int) $eachProduct['qty'];
+                $product->update(['unit' => $qty]);
+                //product update close
             }
             DB::commit();
             return response()->json([
